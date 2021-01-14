@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 
-namespace cineTP
+namespace GestorCine
 {
     class Program
     {
@@ -13,6 +13,7 @@ namespace cineTP
                 double pEntrada = 100.00;
                 int cEntrada = 1;
                 Stack pilaComentarios = new Stack();
+                Queue colaComentarios = new Queue();
 
                 // ................................................................. //
 
@@ -117,13 +118,13 @@ namespace cineTP
 
                 void listaPelis()
                 {
-                    Console.Write("LISTADO DE PELIS \n\n\n");
+                    Console.Write("LISTADO DE PELIS \n\n");
+                    Console.Write(" 1 - Shrek \n" + " 2 - Star Wars \n" + " 3 - Joker \n" + " 4 - Ratattouille:  Ahora en el IFTS!!! \n");
+                    Console.Write("\nSeleccione una opción: ");
 
-                    Console.Write("Seleccione una peli: \n" + " 1 - Shrek \n" + " 2 - Star Wars \n" + " 3 - Joker \n" + " 4 - Ratattouille:  Ahora en el IFTS!!! \n");
+                /* Impresión por pantalla del Menu para seleccionar las peliculas disponibles  */
 
-                    /* Impresión por pantalla del Menu para seleccionar las peliculas disponibles  */
-
-                    int peli = Convert.ToInt32(Console.ReadLine());    /* ingreso por consola de la selección  */
+                int peli = Convert.ToInt32(Console.ReadLine());    /* ingreso por consola de la selección  */
 
 
                     if (peli == 1)     /* Selección de Pelis con sus variables asociadas para generar la compra  */
@@ -163,12 +164,12 @@ namespace cineTP
                 void candy()
                  {
                     Console.WriteLine("<<<<<<<<<<BIENVENIDO/A AL CANDY BAR>>>>>>>>>>");
-                    Console.WriteLine("Seleccione la opccion \n" +
-                        "\n1.-Hot Dog + Coca Cola 750 CC" +
-                        "\n2.-Nachos + Coca cola 750 CC" +
-                        "\n3.-Balde de pochoclos + 2 vasos de gaseosa 750 CC" +
-                        "\n4.-Papas + Coca cola 750 CC " +
-                        "\n5-Volver al menú principal");
+                    Console.WriteLine("1-Hot Dog + Coca Cola 750 CC" +
+                        "\n2-Nachos + Coca cola 750 CC" +
+                        "\n3-Balde de pochoclos + 2 vasos de gaseosa 750 CC" +
+                        "\n4-Papas + Coca cola 750 CC " +
+                        "\n5-Volver al menú principal" +
+                        "Seleccione la opción:");
                     String s1 = null;
                     s1 = Console.ReadLine();
 
@@ -195,7 +196,7 @@ namespace cineTP
                             menuPrincipal();
                             break;
                         default:
-                            Console.WriteLine("No se ha seleccionado una opcion");
+                            Console.WriteLine("No se ha seleccionado una opcion válida...");
                             candy();
                             break;
                     }
@@ -203,23 +204,25 @@ namespace cineTP
 
                 void comentariosPelis()
                 {
-                    string eleccion;
-                    Console.WriteLine("\nPublicar comentario(1)\nVer comentarios(2)\nVolver al menú principal(3)");
-                    eleccion = Console.ReadLine();
+                Console.WriteLine("\n1-Publicar comentario" 
+                        + "\n2-Ver comentarios" 
+                        + "\n3-Volver al menú principal");
+                Console.WriteLine("\nSeleccione una opción: ");
+                int eleccion = Convert.ToInt32(Console.ReadLine());
 
-                    switch (eleccion)
+                switch (eleccion)
                     {
-                        case "1":
+                        case 1:
                             nuevoComentario();
                             break;
-                        case "2":
+                        case 2:
                             verComents();
                             break;
-                        case "3":
+                        case 3:
                             menuPrincipal();
                             break;
                         default:
-                            Console.WriteLine("Ingresó una opción errónea.");
+                            Console.WriteLine("No ha seleccionado una opcion válida...\n");
                             comentariosPelis();
                             break;
                     }
@@ -227,18 +230,63 @@ namespace cineTP
 
                 void nuevoComentario()
                 {
-                    Console.WriteLine("Escriba su comentario por favor...\n");
-                    pilaComentarios.Push(Console.ReadLine());
+                    Console.WriteLine("\nEscriba su comentario por favor...\n");
+                    String comentarioDeUsuario = Console.ReadLine();
+                    pilaComentarios.Push(comentarioDeUsuario);
+                    colaComentarios.Enqueue(comentarioDeUsuario);
 
-                    comentariosPelis();
+                Console.WriteLine("\n¿Otro comentario?\n"
+                + "Sí (1)\n"
+                + "No (2)\n");
+                Console.Write("Seleccione una opción: ");
+                int seguirComentando = Convert.ToInt32(Console.ReadLine());
+
+                switch (seguirComentando)
+                    {
+                        case 1:
+                            nuevoComentario();
+                            break;
+                        case 2:
+                            comentariosPelis();
+                            break;
+                        default:
+                            comentariosPelis();
+                            break;
                 }
+
+            }
 
                 void verComents()
                 {
-                    foreach (string j in pilaComentarios)
-                    {
-                        Console.WriteLine(j);
-                    }
+                Console.WriteLine("\n1-Más recientes\n"
+                        + "2-Más antiguos\n"
+                        + "3-Volver al menú de comentarios\n");
+                Console.Write("Seleccione una opción: ");
+                int tipoComentarios = Convert.ToInt32(Console.ReadLine());
+
+                switch (tipoComentarios)
+                {
+                    case 1:
+                        foreach (string j in pilaComentarios)
+                        {
+                            Console.WriteLine(j);
+                        }
+                        break;
+                    case 2:
+                        foreach (string j in colaComentarios)
+                        {
+                            Console.WriteLine(j);
+                        }
+                        break;
+                    case 3:
+                        comentariosPelis();
+                        break;
+                    default:
+                        Console.WriteLine("No ha seleccionado una opcion válida...\n");
+                        verComents();
+                        break;
+                }
+               
                     comentariosPelis();
                 }
 
